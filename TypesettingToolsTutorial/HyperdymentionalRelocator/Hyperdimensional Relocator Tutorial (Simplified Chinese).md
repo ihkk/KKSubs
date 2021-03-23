@@ -7,6 +7,8 @@
 > 插件版本： 4.6
 >
 > 译者：ihkk
+>
+> 手册版本：4.6 Alpha
 
 <img src="pics/fullview.png" alt="fullview" style="zoom: 50%;" />
 
@@ -91,8 +93,24 @@
 | `Find Centre`: A useless function that sets \pos in the centre of a rectangular clip. | `Find Center`：一个没啥用的功能，让`\pos`处于矩形`\clip`的中心。 |
 | `Randomise`: randomises values of given tags. With \fs50 and value 4 you can get fs 46-54.<br/>For regular type tags, you can input multiple ones with commas between them.<br/>Also works for alpha, but not colours. Negative values only happen where applicable. Available for \t times. | `Randomise`：随机化给定的标签。例如对`\fs50`执行随机`4`，将会得到`\fs45-54`。对于普通的标签，可以用逗号分隔，进行不同区间的随机化。<br/>对透明度也生效，但对颜色不可以。只有在适用时才可以用负值。对`\t`有效。 |
 | `Letterbreak`: creates vertical text by putting a linebreak after each letter.<br/>`Wordbreak`: replaces spaces with linebreaks. | `Letter break`：在原句每个字母间加入`\N`换行符。<br/>`Word break`：在原句每个单词间加入`\N`换行符。 |
-| Extend Mask: Use Teleport X and Y fields to extend a mask in either or both directions.<br/>This is mainly intended to easily convert something like a rounded square to another rounded rectangle.<br/>Works optimally with a 0,0 coordinate in the centre. May do weird things with curves.<br/>When all coordinates are to one side from 0,0, then this works like shifting. |                                                              |
-| Flip mask: Flips a mask so that when used with its non-flipped counterpart, they create hollow space. For example you have a rounded square. Duplicate it, extend one by 10 pixels in each direction, flip it, and then merge them. You'll get a 10 px outline. |                                                              |
-| Adjust Drawing: (You must not have an unrelated clip in the line.)<br/>   1. Creates a clip that copies the drawing.<br/>   2. You adjust points with clip tool.<br/>   3. Applies new coordinates to the drawing.<br/> |                                                              |
-| Randomask: Moves points in a drawing, each in a random direction, by a factor taken from the Force field. |                                                              |
+| Extend Mask: Use Teleport X and Y fields to extend a mask in either or both directions.<br/>This is mainly intended to easily convert something like a rounded square to another rounded rectangle.<br/>Works optimally with a 0,0 coordinate in the centre. May do weird things with curves.<br/>When all coordinates are to one side from 0,0, then this works like shifting. | `Extend Mask`：根据`Teleport`区填入的值设置来扩大蒙版。<br/>这主要是为了方便地将一个圆形的正方形转换成另一个圆形的矩形。<br/>   以0,0为中心的坐标为最佳工作状态。对于曲线可能会做一些奇怪的事情。<br/>   当所有的坐标都在0,0的一边，那么这就像移位一样。<br/>译者注：不知道是干什么的 |
+| Flip mask: Flips a mask so that when used with its non-flipped counterpart, they create hollow space. For example you have a rounded square. Duplicate it, extend one by 10 pixels in each direction, flip it, and then merge them. You'll get a 10 px outline. | `Flip Mask`：翻转遮罩，当与非翻转的遮罩一起使用时，它们会产生空的空间。<br/>例如，你有一个圆形的正方形，将它复制，在每个方向上延伸10个像素，翻转它，然后将它们合并。复制它，向每个方向延伸10个像素，翻转它，然后合并它们。你会得到一个10 px的轮廓。<br/>译者注：不知道是干什么的 |
+| Adjust Drawing: (You must not have an unrelated clip in the line.)<br/>   1. Creates a clip that copies the drawing.<br/>   2. You adjust points with clip tool.<br/>   3. Applies new coordinates to the drawing.<br/> | `Adjust Drawing`：调整绘图（你不能在行中有一个不相关的蒙版。)<br/>1. 创建一个复制图形的蒙版<br/>2. 你可以用clip工具调整蒙版的控制点<br/>3. 向绘图应用新的坐标点。<br/>译者注：不知道是干什么的 |
+| Randomask: Moves points in a drawing, each in a random direction, by a factor taken from the Force field. | `Randomask`：随机化蒙版。<br/>在`Force`区填入需要随机的力度，然后可以随机移动绘图的坐标点。 |
+
+## Cloning Sequence 克隆区
+
+此工具可以克隆一个序列的字幕。
+
+| 原文                                                         | 译文                                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| This copies specified tags from first line to the others.<br/>Options are position, move, origin point, clip, and rotations.<br/>replicate missing tags: creates tags if they're not present<br/>stack clips: allows stacking of 1 normal and 1 vector clip in one line<br/>match type: if current clip/iclip doesn't match the first line, it will be switched to match<br/>combine vectors: if the first line has a vector clip, then for all other lines with vector clips the vectors will be combined into 1 clip<br/>copy rotations: copies all rotations<br/>With Teleport input, you can shift X and Y coordinates more each line by the given values. | 这个功能可以从第一句复制特效标签到其他句。<br/>标签包括位置、移动、原点设置、蒙版和旋转。<br/>会自动复制缺失的标签：如果不存在，则自动创建。<br/>堆叠剪辑：允许一句普通字幕叠加一个clip蒙版。<br/>匹配类型：如果当前的蒙版`clip`或反蒙版`iclip`与第一行不匹配，则将切换为匹配<br/>合并矢量。如果第一行有一个矢量剪辑，那么对于所有其他有矢量剪辑的行，矢量将被合并成一个剪辑。<br/>复制旋转：复制所有的旋转<br/>使用`Teleport`取输入的数值，你可以设置每一次变化的步长。例如：<br/><img src="pics\clone1.png" style="zoom:50%;" />如图，设置`Teleport`区为(10,30)，则克隆后会变为<img src="pics/clone2.png" style="zoom: 50%;" /> |
+
+## Teleportation 坐标移动区
+
+一个非常实用而强大的工具，可以使用`Teleport`指定单句中所有坐标的位移。
+
+| 原文                                                         | 译文                                                         |
+| ------------------------------------------------------------ | ------------------------------------------------------------ |
+| Teleport shifts coordinates for selected tags (\pos\move\org\clip) by given X and Y values.<br/>It's a simple but powerful tool that allows you to move whole gradients, mocha-tracked signs, etc.<br/>Note that the Teleport fields are also used for some other functions, like Shiftstart and Shiftmove.<br/>These functions don't use the 'Teleportation' button but the one for whatever part of HR they belong to.<br/>'mod' allows you to add an extra factor applied line by line.<br/>For example if you set '5' for 'X', things will shift by extra 5 pixels for each new line.<br/>c1 and c2 control whether Teleportation affects top left and/or bottom right corner of a rectangular clip.<br/>This means that for both X and Y, you can move either one or both sides of the clip.<br/>'exp' means a rectangular clip won't be moved but expanded. X 10 means the clip will expand by 10 to the left and right. This ignores the c1/c2 settings.<br/><br/>Warped Teleport adds an additional value for each new line. | `Teleport`利用给定的(x,y)变化量，移动选定标签`\pos\move\org\clip`的坐标。<br/>这是一个简单而强大的工具，移动所有的渐变、Mocha追踪等。<br/>注意`Teleport`输入框同样可以用于其他的功能，例如`Shiftstart`和`Shiftmove`。<br/>这些功能不使用`Teleportation`按钮，但是使用这个区域的数值。<br/>`mod`允许你在生成的逐句字幕中添加额外的变量。<br/>例如，你在`X`区设置了`5`，那么所有新的行中内容会额外移动5像素。<br/>`c1`和`c2`控制了是否调整矩形`clip`的左上角和/或右下角。这意味着对于`X`和`Y`，你可以移动`clip`一边或者两边。<br/>`exp`意味着矩形蒙版不会被移动而被扩大。`x10`指左右扩大十倍。这个选项会忽略前文提到的`c1`、`c2`。<br/>`Warped Teleport`给每一行添加一个额外的值。 |
 
