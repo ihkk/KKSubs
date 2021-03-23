@@ -8,7 +8,7 @@
 >
 > 译者：ihkk
 
-<img src="fullview.png" alt="fullview" style="zoom: 50%;" />
+<img src="pics/fullview.png" alt="fullview" style="zoom: 50%;" />
 
 # 官方文档对照翻译
 
@@ -20,7 +20,7 @@
 
 ## Position Cannon 定位区
 
-<img src="positioncannon.png" alt="positioncannon" style="zoom:50%;" />
+<img src="pics/positioncannon.png" alt="positioncannon" style="zoom:50%;" />
 
 | 原文                                                         | 译文                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -32,21 +32,21 @@
 | `Shadow Reposition`: "centers" text with shadow by the \shad distance. With \shad4, moves 2 pixels left & up.<br/>   Works with \[xy]shad. Useful when top layer has shadow & needs centering within bottom layer with border.<br/><br/> | `Shadow Reposition`：重新定位阴影位置。根据阴影距离，”居中“字幕。例如阴影长度为`\shad4`，那么会向左上方移动`2`个像素。<br/>适用于`\[xy]shad`。在需要对齐多个图层时可能有用。（译者注：不太懂） |
 | `fbf X <--> Y`: The fbf increase/decrease in pos X will become that of pos Y and vice versa.<br/>   If 'by first' is checked, the first line is the reference line (won't change). Otherwise, it's the last line.<br/>   With 'rotate' checked, the resulting direction is reversed. (Recalculator's Mirror adds more options to this.)<br/>   Example: If a sign moves 100 pixels to the right, with 'first' it will move 100px down (or up with 'rotate').<br/>   Without 'first', the directions are the same, but sign will end where it did before, not start.<br/><br/> | `fbf X <--> Y`：将`fbf逐帧字幕`中`\pos`位置代码里的`X轴`变化量和`Y轴`变化量互换。<br/>如果勾选`by first`，那么就以第一句作为基准，不会改变；如果不勾选，就以最后一句作为基准不改变。<br/>如果`rotate`变勾选，那么运动方向将会相反。（译者注：例如原先运动方向是`→`，勾选了`rotate`则会变为`↑`，不勾选则是`↓`。）<br/><br/>例如：如果原先是向右移动100像素，勾选了`by first`就会向下移动100像素（如果勾选`rotate`则会向上移动），如果没勾选`by first`，运动方向依然是向下，但原先的运动起点将会是新的运动的终点。） |
 | `Numbers:` Informative only function that shows \pos differences between consecutive selected lines.<br/>   Can be useful if you want to continue a fbf movement and need an idea of the distances required. | `Numbers`：对于选中的连续字幕，可以显示`\pos`的变换量。<br/>在你需要补充`连续移动的fbf逐帧字幕`时，可以列表显示一次需要移动多少量。<br/> |
-| `org to fax`：Calculates \fax from the line between \pos and \org coordinates. | `org to fax`：在绕Z轴旋转的可视化操作界面，通过改变字幕和中心的位置，来调整倾斜度`\fax`<img src="orgtofax.png" alt="orgtofax" style="zoom:25%;" /><img src="orgtofax2.png" alt="orgtofax2" style="zoom:25%;" /> |
-| `clip to fax`：Calculates \fax from the line between the first 2 points of a vectorial clip.<br/>   Both of these work with \fscx, \fscy, and \frz.<br/>   If the clip has 4 points, points 3-4 are used to calculate fax for the last character, and a gradient is applied.<br/>   See blog post for more info - http://unanimated.hostfree.pw/itw/tsblok.htm#fax | `clip to fax`：与`org to fax`类似，只是倾斜角为`\clip`中两点连线的倾角。如果`\clip`有四个点，那么第3-4个将会被作为参考点。<img src="cliptofax.png" alt="cliptofax" style="zoom:30%;" /> |
+| `org to fax`：Calculates \fax from the line between \pos and \org coordinates. | `org to fax`：在绕Z轴旋转的可视化操作界面，通过改变字幕和中心的位置，来调整倾斜度`\fax`<img src="pics/orgtofax.png" alt="orgtofax" style="zoom:25%;" /><img src="pics/orgtofax2.png" alt="orgtofax2" style="zoom:25%;" /> |
+| `clip to fax`：Calculates \fax from the line between the first 2 points of a vectorial clip.<br/>   Both of these work with \fscx, \fscy, and \frz.<br/>   If the clip has 4 points, points 3-4 are used to calculate fax for the last character, and a gradient is applied.<br/>   See blog post for more info - http://unanimated.hostfree.pw/itw/tsblok.htm#fax | `clip to fax`：与`org to fax`类似，只是倾斜角为`\clip`中两点连线的倾角。如果`\clip`有四个点，那么第3-4个将会被作为参考点。<img src="pics/cliptofax.png" alt="cliptofax" style="zoom:30%;" /> |
 | `Clip to Frz`: Calculates \frz from the first 2 points of a vectorial clip. Direction of text is from point 1 to point 2.<br/>   If the clip has 4 points, the frz is average from 1-2 and 3-4. (Both lines must be in the same direction.)<br/>   This helps when the sign is in the middle of a rectangular area where the top and bottom lines converge. | `clip to frz`：与`clip to fax`类似，`\clip`直线倾斜角为旋转的度数。如果`\clip`有四个点，那么`\frz`会选取1-2和3-4的平均值。（二者需要平行） |
 | `clip to reposition`：Shifts \pos based on first 2 points of a vectorial clip.<br/>   You can use a reference point in the video image and set the clip points at start/end of the movement. | `clip to reposition`：根据`\clip`中两点的**相对位置**，移动字幕。你可以结合视频中的参考点来使用。 |
 | `clip2pos fbf`：This is for manual fbf tracking. Track something in the video with one point of a clip in each frame.<br/>   The first line is a reference point. The \pos of other lines will shift based on the difference between the clip on the first line and the clip on the current line. (Starting point is always \pos from line 1.) | `clip2pos fbf`：适用于手动追踪，在每一帧中用一个点追踪。第一行是一个参考点，其他行的`\pos`将会在第一行的基础上进行移动。 |
-| `frz+org2pos`：把有`\org`的旋转变为无`\org`的旋转，显示效果不变。 | <img src="frz+org2pos1.png" alt="frz+org2pos1" style="zoom:20%;" /><img src="frz+org2pos2.png" alt="frz+org2pos2" style="zoom:20%;" /> |
-| `space out letters`：把一句字幕的所有字符拆开，分散在`\clip`的选取中。 | <img src="spaceoutletters1.png" alt="spaceoutletters1" style="zoom:25%;" /><img src="spaceoutletters2.png" alt="spaceoutletters2" style="zoom:25%;" /> |
-| `warp text`：使字幕向上/向下拱起。需要配合`space out letters`使用，先分离文字，然后在左上角框中输入拱起的值，正为上负为下。 | <img src="warptext1.png" alt="warptext1" style="zoom:25%;" /><img src="warptext2.png" alt="warptext2" style="zoom:25%;" /> |
-| `replicate`：重复字幕，并且可以设置单词重复的位移量。<br/><br/>如右图：`replicas`：重复次数 `[XY] Distance`单次偏移量 | <img src="relicate.png" alt="image-20210204205732480" style="zoom: 50%;" /> |
-| `Track by clip`：根据`\clip`的轨迹移动追踪。会根据`\clip`的点的位置，生成`fbf逐帧字幕`的`\pos`的位置 | <img src="trackbyclip.png" alt="trackbyclip" style="zoom:25%;" /> |
+| `frz+org2pos`：把有`\org`的旋转变为无`\org`的旋转，显示效果不变。 | <img src="pics/frz+org2pos1.png" alt="frz+org2pos1" style="zoom:20%;" /><img src="pics/frz+org2pos2.png" alt="frz+org2pos2" style="zoom:20%;" /> |
+| `space out letters`：把一句字幕的所有字符拆开，分散在`\clip`的选取中。 | <img src="pics/spaceoutletters1.png" alt="spaceoutletters1" style="zoom:25%;" /><img src="pics/spaceoutletters2.png" alt="spaceoutletters2" style="zoom:25%;" /> |
+| `warp text`：使字幕向上/向下拱起。需要配合`space out letters`使用，先分离文字，然后在左上角框中输入拱起的值，正为上负为下。 | <img src="pics/warptext1.png" alt="warptext1" style="zoom:25%;" /><img src="pics/warptext2.png" alt="warptext2" style="zoom:25%;" /> |
+| `replicate`：重复字幕，并且可以设置单词重复的位移量。<br/><br/>如右图：`replicas`：重复次数 `[XY] Distance`单次偏移量 | <img src="pics/relicate.png" alt="image-20210204205732480" style="zoom: 50%;" /> |
+| `Track by clip`：根据`\clip`的轨迹移动追踪。会根据`\clip`的点的位置，生成`fbf逐帧字幕`的`\pos`的位置 | <img src="pics/trackbyclip.png" alt="trackbyclip" style="zoom:25%;" /> |
 | `fbf retrack`：There is simple mode and 'smoothen track' mode.<br/><br/>Simple mode is like fbf-transform for position, but it can be applied to several layers at the same time and have different accel for X and Y. If you check 'layers', the scale is not by selection but by start time. You can have subtitles sorted by layers, but each layer must be sorted by time. Of course each frame will have the same position for all layers/signs. You can use Repositioning Field for accel, or Teleport for separate X/Y accel. You can track only X or Y if you check only one of those. Without 'layers' checked, it simply goes through selected lines and can be applied to signs in the same frame.<br/><br/>'Smoothen track' mode is activated when you check 'smooth'. This is designed for smoothening tracking data, i.e. it will move positions that stand out closer to the main line of the track. It would make no sense to apply this to shaking signs, but if you have trouble tracking something in mocha and the sign tends to jump off on some frames, this will pull the jumps back in line. You can apply different strength of smoothening, by using the Force Field. 0 is the lowest strength; 100 is the highest and will make the track a straight line. | `fbf retrack`：拥有`简单模式`和`平滑模式`。<br/><br/>`简单模式`比较像`位置\pos`的`fbf逐帧转换`，但可以同时应用于不同行的字幕，同时可以分别设置`x`和`y`的加速度。（译者注：使用条件：已经有多条时间不同但位置相同的`fbf`字幕，且第一句、最后一句的位置不同。）可以勾选`layers`来区分不同的段。如果开始时间一致，那么相同帧的不同字幕将会有相同的位置。<br/>你可以在左上角的`disPosition`输入框填入加速度，或右上角的`Teleport`输入框填入独立的`x`和`y`的加速度。<br/><br/>`平滑追踪`模式将在你勾选了`smooth`时被激活。这是用来平滑数据的，也就是说，它会将移动更靠近主字幕。你不应该对`抖动`的字幕应用这个选项，但是可以用在`mocha追踪`时，例如，某一个帧追踪的位置突然偏离了正确的轨迹，那么这个模式可以把脱离的字幕拉回到应在的位置。<br/>你可以使用不同的平滑力度，在`Force Field`中填入数值。0是最低力度，100是最高数值，会让轨迹变成一条直线。<br/>（译者注：可以理解为`拟合`） |
 
 ## Hyperspace Travel 位移区
 
-<img src="soulbilocator.png" alt="soulbilocator" style="zoom:50%;" />
+<img src="pics/soulbilocator.png" alt="soulbilocator" style="zoom:50%;" />
 
 | 原文                                                         | 译文                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
@@ -68,7 +68,7 @@
 
 ## Morphing Ground 变形区
 
-<img src="morphing grounds.png" alt="morphing grounds" style="zoom:50%;" />
+<img src="pics/morphing grounds.png" alt="morphing grounds" style="zoom:50%;" />
 
 | 原文                                                         | 译文                                                         |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
