@@ -11,4 +11,4 @@ Subtitles which were re-timed or edited by KK for certain versions.
 
 ## Lua Macros
 
-目前在写的个人使用的小插件，用于快速添加特效行，及字幕组的中日双语字幕时间覆盖和校对。
+Macros used for adding effect lines, and covering & checking lines for bilingual subtitles.
