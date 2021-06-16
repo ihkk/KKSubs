@@ -75,16 +75,16 @@ Additionally, if there are some labels including `\fs`,`\pos` in text lines, the
 
 Usually when processing a bilingual subtitle file, lines in the original language are used for timing, and the translated lines' time are covered by the lines with original lines. This tool will automatically help you cover the translation lines. Subtitles should be set as below before using the macro.
 
-| ID |Layer|Time| Style | Text |
+| Line ID |Layer|Time| Style | Text |
 |----|----|-------|------|------|
 | 1  |0|0:00-0:05|JP-TEXT|きみの声忘れない|
 | 2  |1|0:02-0:03|JP-TEXT-UP|涙も忘れない|
 | 3  |*|0:00-0:00|CN-TEXT|忘不了你的声音|
 | 4  |*|0:00-0:00|CN-TEXT|也忘不了你的泪水|
 
-The macro will process the lines above into:
+↓ The macro will process the lines above into:
 
-| ID |Layer|Time| Style | Text |
+| Line ID |Layer|Time| Style | Text |
 |----|-----|----|-------|------|
 | 1  |0|0:00-0:05|JP-TEXT|きみの声忘れない|
 | 2  |1|0:02-0:03|JP-TEXT-UP|涙も忘れない|
