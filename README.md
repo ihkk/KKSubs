@@ -92,3 +92,10 @@ Usually when processing a bilingual subtitle file, lines in the original languag
 | 4  |**2**|**0:02-0:03**|**CN-TEXT-UP**|也忘不了你的泪水|
 
 Which means that, the macro can not only copy the time but also reset the correct style of the translation lines. The layer will automatically add on 1 to the original layer number.
+
+### Jump to corresponding line
+
+This is a noun-GUI function. It can help you quickly jump from one line to its corresponding line.
+
+Since this macro does not require the names of CN and JP styles, the default  is `TEXT-JP`, `TEXT-CN`, `TEXT-JP-U` and `TEXT-CN-U` . Other style names are not supported.
+

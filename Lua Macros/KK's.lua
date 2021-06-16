@@ -434,6 +434,51 @@ function check_jp_cn(subs)  --检查中日匹配&空格
 end
 
 
+-- 跳转到对应的中/日文字幕对话行
+function jump_to_corresponding_line(subs,sel)
+    local i=1
+    local jp_num={}
+    local jp_up_num={}
+    local cn_num={}
+    local cn_up_num={}
+    for i=1,#subs do -- 存储所有的行数
+        local l=subs[i]
+        if l.style=="TEXT-JP"
+        then
+            table.insert(jp_num,i)
+        elseif l.style=="TEXT-JP-U"
+        then
+            table.insert(jp_up_num,i)
+        elseif l.style=="TEXT-CN"
+        then
+            table.insert(cn_num,i)
+        elseif l.style=="TEXT-CN-U"
+        then
+            table.insert(cn_up_num,i)
+        end
+    end
+
+    local present_style=subs[sel[1]].style --找到选中行的样式
+    local present_num=sel[1] --选中行的行数
+    local jp_first=jp_num[1] --找到日、中的首行行数
+    local cn_first=cn_num[1]
+    if present_style=="TEXT-JP" or present_style=="TEXT-JP-U" then
+        target_num=present_num - jp_first + cn_first        
+    end
+    if present_style=="TEXT-CN" or present_style=="TEXT-CN-U" then
+        target_num=present_num - cn_first + jp_first        
+    end
+
+    local return_table={}
+    table.insert( return_table, target_num )
+    return return_table
+end
+
+
+
+
+
+
 
 function cover_cn_by_jp(subs)  --日语轴样式和时间覆盖中文轴
     buttons,results =aegisub.dialog.display(jp_cn_config1,{"OK","Cancel"})
@@ -538,6 +583,7 @@ end
 aegisub.register_macro(script_name.."/去注释","删除所有的注释行",NO)
 aegisub.register_macro("Kamigami/日文轴覆盖中文轴","Kamigami JP&CN",cover_cn_by_jp)
 aegisub.register_macro("Kamigami/检查中日轴","Kamigami JP&CN",check_jp_cn)
+aegisub.register_macro("Kamigami/跳转到对应行","Kamigami Jump Line",jump_to_corresponding_line)
 aegisub.register_macro("Auto Template/code line","添加code line",insert_auto_codeline)
 aegisub.register_macro("Auto Template/code syl","添加code syl",insert_auto_codesyl)
 aegisub.register_macro("Auto Template/code once","添加code once",insert_auto_codeonce)
