@@ -1,13 +1,38 @@
-# KKSubs
-## Movies
+# Movies
 
 Subtitles which were re-timed or edited by KK for certain versions.
 
-## Lua Macros
+# Lua Macros
 
 Macros used for adding effect lines, covering and checking lines for bilingual(especially Japanese & Chinese) subtitles.
 
-At the very beginning the macro will ask you to fill in the style name of Japanese and Chinese Subtitles (also JP-UP & CN-UP if needed), then it will automatically do the checking work.
+## Auto Template
+
+These functions are under: `\Automation\Auto Template`
+
+Using this macro, you can easily add the following lines by simply clicking the menu selection;
+
+- (commented) code line
+- (commented) code syl
+- (commented) code once
+- (commented) template line
+- (commented) template char
+- (commented) template noblank
+- (commented) template line noblank notext
+- (code) “First syl” and related template lines
+- (code) char counter `ci` and related template lines
+- (code) A table which stores shape
+- (code) Add a math fix function
+- (code) Add text to shape function using Yutils
+- (code) Add functions of 4 types “AutoTags” and related template lines
+
+
+
+## Bilingual Macros
+
+These functions are under: `\Automation\Kamigami`
+
+At the very beginning the macros will ask you to fill in the style name of Japanese and Chinese Subtitles (also JP-UP & CN-UP if needed), then it will automatically do the checking work.
 
 ###  Space Check
 
@@ -18,7 +43,7 @@ The macro follows the standard that in Japanese subtitles only full width spaces
 |------------------|---------|
 | Full space in CN | 忘不了`　`你的声音  |
 | Half space in JP | きみの声` `忘れない|
-| Spce at line tail | 忘不了你的声音` `  |
+| Space at line tail | 忘不了你的声音` ` |
 
 Additionally, when pasting Japanese text from Excel, in some situations there will exist a Left-to-right mark like `　`. This is similar to full-width space but they are different.
 | Space type | Example | Ascii |
@@ -31,7 +56,7 @@ Additionally, when pasting Japanese text from Excel, in some situations there wi
 
 ### Number & Time Check
 
-In a bilingual subtitile file, all dialoge lines should have two lines in different languages theoretically. For example, the following two lines will apprear at the same time.
+In a bilingual subtitle file, all dialogue lines should have two lines in different languages theoretically. For example, the following two lines will appear at the same time.
 
 | ID |Time| Layer | Style | Text |
 |----|----|-------|-------|------|
