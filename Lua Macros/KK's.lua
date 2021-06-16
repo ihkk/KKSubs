@@ -2,7 +2,7 @@ script_name="KK's Test"
 script_description="自动添加code&template行、双语字幕校对及Test"
 script_author="IKK"
 script_version="alpha0.1"
-au_return="\n\n──────────\nPowered By IKK\n2021.6.3\n──────────\n"
+au_return="\n\n──────────\nPowered By IKK\n2021.6.16\n──────────\n"
 
 function NO(subs)
     local i=1
@@ -377,6 +377,7 @@ function check_jp_cn(subs)  --检查中日匹配&空格
                                             -- 检查带标签的text行并提醒
                                             if line_with_lable_count~=0 then  
                                                 aegisub.debug.out("\n\n【提示】有"..tostring(line_with_lable_count).."句字幕带标签，请确认中日字幕均已处理。\n已经自动选择有标签的行。")
+                                                aegisub.debug.out(au_return)
                                                 return line_with_lable
                                             
                                             end
@@ -429,7 +430,7 @@ function check_jp_cn(subs)  --检查中日匹配&空格
 
 
     end
-    aegisub.debug.out(au_return)
+    
 end
 
 
