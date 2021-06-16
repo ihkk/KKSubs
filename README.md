@@ -28,9 +28,9 @@ Using this macro, you can easily add the following lines by simply clicking the 
 
 
 
-## Bilingual Macros
+## Bilingual Tools
 
-These functions are under: `\Automation\Kamigami`
+These macros are under: `\Automation\Kamigami`
 
 At the very beginning the macros will ask you to fill in the style name of Japanese and Chinese Subtitles (also JP-UP & CN-UP if needed), then it will automatically do the checking work.
 
