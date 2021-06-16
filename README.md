@@ -27,6 +27,8 @@ Additionally, when pasting Japanese text from Excel, in some situations there wi
 | Half space | ` ` |32|
 | Full space with Left-to-right mark | `　‎` |\u3000\u200e|
 
+> The macro cannot search for lines with a half-space and the control character at the end. This issue might be solved in following updates.
+
 ### Number & Time Check
 
 In a bilingual subtitile file, all dialoge lines should have two lines in different languages theoretically. For example, the following two lines will apprear at the same time.
@@ -55,11 +57,13 @@ Usually when processing a bilingual subtitile file, lines in the original langua
 
 The macro will process the lines above into:
 
-| ID |Time| Style | Text |
-|----|----|-------|------|
-| 1  |0:00-0:05|JP-TEXT|きみの声忘れない|
-| 2  |0:02-0:03|JP-TEXT-UP|涙も忘れない|
-| 3  |**0:00-0:05**|CN-TEXT|忘不了你的声音|
-| 4  |**0:02-0:03**|**CN-TEXT-UP**|也忘不了你的泪水|
+| ID |Layer|Time| Style | Text |
+|----|-----|----|-------|------|
+| 1  ||0:00-0:05|JP-TEXT|きみの声忘れない|
+| 2  ||0:02-0:03|JP-TEXT-UP|涙も忘れない|
+| 3  |**1**|**0:00-0:05**|CN-TEXT|忘不了你的声音|
+| 4  |**1**|**0:02-0:03**|**CN-TEXT-UP**|也忘不了你的泪水|
 
 Which means that, the macro can not only copy the time but also reset the correct style of the translation lines.
+**Note that: whatever the layers of original language lines were, the macro will always set the layers of translated lines as 1**
+> This issue might be solved in following updates.
