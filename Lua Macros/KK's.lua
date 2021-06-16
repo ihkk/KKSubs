@@ -252,6 +252,9 @@ function check_jp_cn(subs)  --检查中日匹配&空格
         local jp_up_text={}
         local cn_up_text={}
 
+        local line_with_lable={}
+        local line_with_lable_count=0
+
 
 
         local jp_style = results["日"] --输入样式名
@@ -266,21 +269,33 @@ function check_jp_cn(subs)  --检查中日匹配&空格
                 jpcnt=jpcnt+1
                 jp_lines_time_start[jpcnt]=l.start_time
                 jp_lines_time_end[jpcnt]=l.end_time
-                jp_text[jpcnt]=l.text                
+                jp_text[jpcnt]=l.text
+
+                if string.match(l.text,"\\") then -- 检查带标签的text行
+                    table.insert(line_with_lable,i) 
+                    line_with_lable_count=line_with_lable_count+1  
+                end       
+
             elseif l.style==cn_style and string.match(l.text,"%-%-")==nil --处理CN轴
             then
                 table.insert(cn_lines_num, i)
                 cncnt=cncnt+1
                 cn_lines_time_start[cncnt]=l.start_time
                 cn_lines_time_end[cncnt]=l.end_time
-                cn_text[cncnt]=l.text                                  
+                cn_text[cncnt]=l.text
             elseif l.style==jp_up_style and string.match(l.text,"%-%-")==nil --处理JP-UP轴
             then
                 table.insert(jp_up_lines_num, i)
                 jpupcnt=jpupcnt+1          
                 jp_up_lines_time_start[jpupcnt]=l.start_time
                 jp_up_lines_time_end[jpupcnt]=l.end_time
-                jp_up_text[jpupcnt]=l.text                                   
+                jp_up_text[jpupcnt]=l.text
+
+                if string.match(l.text,"\\") then  -- 检查带标签的text行
+                    table.insert(line_with_lable,i) 
+                    line_with_lable_count=line_with_lable_count+1  
+                end 
+
             elseif l.style==cn_up_style and string.match(l.text,"%-%-")==nil --处理CN-UP轴
             then
                 table.insert(cn_up_lines_num, i)
@@ -358,6 +373,16 @@ function check_jp_cn(subs)  --检查中日匹配&空格
                                         
                                         if wrongtextcnt==0 then
                                              aegisub.debug.out("\n\n空格检查未发现错误。")
+                                            
+                                            -- 检查带标签的text行并提醒
+                                            if line_with_lable_count~=0 then  
+                                                aegisub.debug.out("\n\n【提示】有"..tostring(line_with_lable_count).."句字幕带标签，请确认中日字幕均已处理。\n已经自动选择有标签的行。")
+                                                return line_with_lable
+                                            
+                                            end
+
+
+
                                         else
                                             local i=1
                                             for i=1, wrongtextcnt do
@@ -424,6 +449,9 @@ function cover_cn_by_jp(subs)  --日语轴样式和时间覆盖中文轴
         local jp_up_lines_time_start={}
         local jp_lines_time_end={}
         local jp_up_lines_time_end={}
+        
+        local jp_layer={}
+        local jp_up_layer={}
 
         local jp_style = results["日"]
         local cn_style = results["中"]
@@ -441,16 +469,18 @@ function cover_cn_by_jp(subs)  --日语轴样式和时间覆盖中文轴
                 jpcnt=jpcnt+1
                 jp_lines_time_start[jpcnt]=l.start_time
                 jp_lines_time_end[jpcnt]=l.end_time
+                jp_layer[jpcnt]=l.layer
                 cntalljp=cntalljp+1
-                styles[cntalljp]=0
+                styles[cntalljp]=0 --如果是普通轴，则样式标0
             elseif l.style==jp_up_style --处理JP-UP轴
             then
                 table.insert(jp_up_lines_num, i)
                 jpupcnt=jpupcnt+1          
                 jp_up_lines_time_start[jpupcnt]=l.start_time
-                jp_up_lines_time_end[jpupcnt]=l.end_time  
+                jp_up_lines_time_end[jpupcnt]=l.end_time 
+                jp_up_layer[jpupcnt]=l.layer
                 cntalljp=cntalljp+1
-                styles[cntalljp]=1                              
+                styles[cntalljp]=1  --如果是上轴，则样式标1                            
             elseif l.style==cn_style --处理CN轴
             then
                 table.insert(cn_lines_num, i)
@@ -475,7 +505,7 @@ function cover_cn_by_jp(subs)  --日语轴样式和时间覆盖中文轴
                     tmp_cn_sub.start_time=jp_lines_time_start[jp]
                     tmp_cn_sub.end_time=jp_lines_time_end[jp]
                     tmp_cn_sub.style=cn_style
-                    tmp_cn_sub.layer=1
+                    tmp_cn_sub.layer=jp_layer[jp]+1
                     subs.delete(cntmpnum)
                     subs[-cntmpnum]=tmp_cn_sub
                 else
@@ -486,7 +516,7 @@ function cover_cn_by_jp(subs)  --日语轴样式和时间覆盖中文轴
                     tmp_cn_sub.start_time=jp_up_lines_time_start[jp_up]
                     tmp_cn_sub.end_time=jp_up_lines_time_end[jp_up]
                     tmp_cn_sub.style=cn_up_style
-                    tmp_cn_sub.layer=1
+                    tmp_cn_sub.layer=jp_up_layer[jp_up]+1
                     subs.delete(cntmpnum)
                     subs[-cntmpnum]=tmp_cn_sub  
                 end                  

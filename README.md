@@ -45,27 +45,23 @@ Obviously, the total line numbers of JP-TEXT should be same as CN-TEXT; numbers 
 **The macro will automatically count the numbers of JP and CN lines and would warn you if the result differs. If the numbers argrees, the macro will then check the time of each subtitle sets, and will report if the times of all lines agree or not.**
 
 ### Cover Lines
- 
+
 Usually when processing a bilingual subtitile file, lines in the original language are used for timing, and the translated lines' time are coverd by the lines with original lines. This tool will automatically help you cover the translation lines. Subtiltes should be set as below before using the macro.
 
-| ID |Time| Style | Text |
-|----|----|-------|------|
-| 1  |0:00-0:05|JP-TEXT|きみの声忘れない|
-| 2  |0:02-0:03|JP-TEXT-UP|涙も忘れない|
-| 3  |0:00-0:00|CN-TEXT|忘不了你的声音|
-| 4  |0:00-0:00|CN-TEXT|也忘不了你的泪水|
+| ID |Layer|Time| Style | Text |
+|----|----|-------|------|------|
+| 1  |0|0:00-0:05|JP-TEXT|きみの声忘れない|
+| 2  |1|0:02-0:03|JP-TEXT-UP|涙も忘れない|
+| 3  |*|0:00-0:00|CN-TEXT|忘不了你的声音|
+| 4  |*|0:00-0:00|CN-TEXT|也忘不了你的泪水|
 
 The macro will process the lines above into:
 
 | ID |Layer|Time| Style | Text |
 |----|-----|----|-------|------|
-| 1  ||0:00-0:05|JP-TEXT|きみの声忘れない|
-| 2  ||0:02-0:03|JP-TEXT-UP|涙も忘れない|
-| 3  |**1**|**0:00-0:05**|CN-TEXT|忘不了你的声音|
-| 4  |**1**|**0:02-0:03**|**CN-TEXT-UP**|也忘不了你的泪水|
+| 1  |0|0:00-0:05|JP-TEXT|きみの声忘れない|
+| 2  |1|0:02-0:03|JP-TEXT-UP|涙も忘れない|
+| 3  |1|**0:00-0:05**|CN-TEXT|忘不了你的声音|
+| 4  |2|**0:02-0:03**|**CN-TEXT-UP**|也忘不了你的泪水|
 
-Which means that, the macro can not only copy the time but also reset the correct style of the translation lines.
-
-**Note that: whatever the layers of original language lines were, the macro will always set the layers of translated lines as 1**
-
-> This issue might be solved in following updates.
+Which means that, the macro can not only copy the time but also reset the correct style of the translation lines. The layer will automatically add on 1 to the original layer number.
