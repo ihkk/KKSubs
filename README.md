@@ -27,7 +27,7 @@ Additionally, when pasting Japanese text from Excel, in some situations there wi
 | Half space | ` ` |32|
 | Full space with Left-to-right mark | `　‎` |\u3000\u200e|
 
-> The macro cannot search for lines with a half-space and the control character at the end. This issue might be solved in following updates.
+> The macro cannot search for lines with a half-width space and the control character at the end. This issue might be solved in following updates.
 
 ### Number & Time Check
 
