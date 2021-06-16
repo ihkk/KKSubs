@@ -6,6 +6,7 @@ Subtitles which were re-timed or edited by KK for certain versions.
 ## Lua Macros
 
 Macros used for adding effect lines, covering and checking lines for bilingual(especially Japanese & Chinese) subtitles.
+
 At the very beginning the macro will ask you to fill in the style name of Japanese and Chinese Subtitles (also JP-UP & CN-UP if needed), then it will automatically do the checking work.
 
 ###  Space Check
