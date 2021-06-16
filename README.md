@@ -58,7 +58,7 @@ The macro will process the lines above into:
 |----|----|-------|------|
 | 1  |0:00-0:05|JP-TEXT|きみの声忘れない|
 | 2  |0:02-0:03|JP-TEXT-UP|涙も忘れない|
-| 3  |==0:00-0:05==|CN-TEXT|忘不了你的声音|
-| 4  |==0:02-0:03==|CN-TEXT-UP|也忘不了你的泪水|
+| 3  |**0:00-0:05**|CN-TEXT|忘不了你的声音|
+| 4  |**0:02-0:03**|**CN-TEXT-UP**|也忘不了你的泪水|
 
 Which means that, the macro can not only copy the time but also reset the correct style of the translation lines.
