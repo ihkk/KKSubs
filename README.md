@@ -65,5 +65,7 @@ The macro will process the lines above into:
 | 4  |**1**|**0:02-0:03**|**CN-TEXT-UP**|也忘不了你的泪水|
 
 Which means that, the macro can not only copy the time but also reset the correct style of the translation lines.
+
 **Note that: whatever the layers of original language lines were, the macro will always set the layers of translated lines as 1**
+
 > This issue might be solved in following updates.
