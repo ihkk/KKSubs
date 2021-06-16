@@ -3,7 +3,6 @@
 
 Subtitles which were re-timed or edited by KK for certain versions.
 
-
 ## Lua Macros
 
 Macros used for adding effect lines, covering and checking lines for bilingual(especially Japanese & Chinese) subtitles.
@@ -12,7 +11,8 @@ At the very beginning the macro will ask you to fill in the style name of Japane
 ###  Space Check
 
 The macro follows the standard that in Japanese subtitles only full width spaces like `　` exist, while in Chinese subtitles only half width spaces like ` ` exist. Additionally, there should be no spaces at the end of a line.
-The macro will mark out the subtitles which violated the rules above. The following wrong subtitles are listed as examples.
+**The macro will mark out the subtitles which violated the rules above. The following wrong subtitles are listed as examples.**
+
 | Error Type       | Example |
 |------------------|---------|
 | Full space in CN | 忘不了`　`你的声音  |
@@ -38,4 +38,27 @@ In a bilingual subtitile file, all dialoge lines should have two lines in differ
 | 4  |0:02-0:03|  1    |CN-TEXT-UP|也忘不了你的泪水|
 
 Obviously, the total line numbers of JP-TEXT should be same as CN-TEXT; numbers of JP-TEXT-UP and CN-TEXT-UP should also be the same if exists. Additionally, the Japanese subtitile with its corresponding Chinese subtitile should appear at the same time.
-The macro will automatically count the numbers of JP and CN lines and would warn you if the result differs. If the numbers argrees, the macro will then check the time of each subtitle sets, and will report if the times of all lines agree or not.
+
+**The macro will automatically count the numbers of JP and CN lines and would warn you if the result differs. If the numbers argrees, the macro will then check the time of each subtitle sets, and will report if the times of all lines agree or not.**
+
+### Cover Lines
+ 
+Usually when processing a bilingual subtitile file, lines in the original language are used for timing, and the translated lines' time are coverd by the lines with original lines. This tool will automatically help you cover the translation lines. Subtiltes should be set as below before using the macro.
+
+| ID |Time| Style | Text |
+|----|----|-------|------|
+| 1  |0:00-0:05|JP-TEXT|きみの声忘れない|
+| 2  |0:02-0:03|JP-TEXT-UP|涙も忘れない|
+| 3  |0:00-0:00|CN-TEXT|忘不了你的声音|
+| 4  |0:00-0:00|CN-TEXT|也忘不了你的泪水|
+
+The macro will process the lines above into:
+
+| ID |Time| Style | Text |
+|----|----|-------|------|
+| 1  |0:00-0:05|JP-TEXT|きみの声忘れない|
+| 2  |0:02-0:03|JP-TEXT-UP|涙も忘れない|
+| 3  |==0:00-0:05==|CN-TEXT|忘不了你的声音|
+| 4  |==0:02-0:03==|CN-TEXT-UP|也忘不了你的泪水|
+
+Which means that, the macro can not only copy the time but also reset the correct style of the translation lines.
