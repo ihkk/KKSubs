@@ -11,4 +11,4 @@ Subtitles which were re-timed or edited by KK for certain versions.
 
 ## Lua Macros
 
-Macros used for adding effect lines, and covering & checking lines for bilingual subtitles.
+Macros used for adding effect lines, covering and checking lines for bilingual(especially Japanese & Chinese) subtitles.
