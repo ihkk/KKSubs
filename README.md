@@ -40,13 +40,15 @@ In a bilingual subtitile file, all dialoge lines should have two lines in differ
 | 3  |0:00-0:05|  1    |CN-TEXT|忘不了你的声音|
 | 4  |0:02-0:03|  1    |CN-TEXT-UP|也忘不了你的泪水|
 
-Obviously, the total line numbers of JP-TEXT should be same as CN-TEXT; numbers of JP-TEXT-UP and CN-TEXT-UP should also be the same if exists. Additionally, the Japanese subtitile with its corresponding Chinese subtitile should appear at the same time.
+Obviously, the total line numbers of JP-TEXT should be same as CN-TEXT; numbers of JP-TEXT-UP and CN-TEXT-UP should also be the same if exists. Additionally, the Japanese subtitle with its corresponding Chinese subtitle should appear at the same time.
 
-**The macro will automatically count the numbers of JP and CN lines and would warn you if the result differs. If the numbers argrees, the macro will then check the time of each subtitle sets, and will report if the times of all lines agree or not.**
+**The macro will automatically count the numbers of JP and CN lines and would warn you if the result differs. If the numbers agrees, the macro will then check the time of each subtitle sets, and will report if the times of all lines agree or not.**
+
+Additionally, if there are some labels including `\fs`,`\pos` in text lines, the macro will select these lines with labels to remind the user as the final step of the bilingual checking procedure.
 
 ### Cover Lines
 
-Usually when processing a bilingual subtitile file, lines in the original language are used for timing, and the translated lines' time are coverd by the lines with original lines. This tool will automatically help you cover the translation lines. Subtiltes should be set as below before using the macro.
+Usually when processing a bilingual subtitle file, lines in the original language are used for timing, and the translated lines' time are covered by the lines with original lines. This tool will automatically help you cover the translation lines. Subtitles should be set as below before using the macro.
 
 | ID |Layer|Time| Style | Text |
 |----|----|-------|------|------|

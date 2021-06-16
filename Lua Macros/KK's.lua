@@ -429,6 +429,7 @@ function check_jp_cn(subs)  --检查中日匹配&空格
 
 
     end
+    aegisub.debug.out(au_return)
 end
 
 
@@ -528,24 +529,11 @@ function cover_cn_by_jp(subs)  --日语轴样式和时间覆盖中文轴
             aegisub.debug.out("中日字幕数量不匹配，请检查。\n注意：应用此脚本时，所有的中文字幕都应当被设置为默认格式（例如所有中文都是\"TEXT-CN\"样式），而不应有\"TEXT-CN-U\"格式出现。")
             aegisub.debug.out(au_return)
         end
+        
     end
 end
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+-- 注册插件到菜单
 aegisub.register_macro(script_name.."/去注释","删除所有的注释行",NO)
 aegisub.register_macro("Kamigami/日文轴覆盖中文轴","Kamigami JP&CN",cover_cn_by_jp)
 aegisub.register_macro("Kamigami/检查中日轴","Kamigami JP&CN",check_jp_cn)
