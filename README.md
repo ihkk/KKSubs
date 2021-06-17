@@ -95,7 +95,7 @@ Which means that, the macro can not only copy the time but also reset the correc
 
 ### Jump to corresponding line
 
-This is a noun-GUI function. It can help you quickly jump from one text line to its corresponding line.
+This is a non-GUI function. It can help you quickly jump from one text line to its corresponding line.
 
 Since this macro does not require to input the names of CN and JP styles (as this macro is used as a short-cut function), the default can only match some certain terms. Other style names are not supported.
 
