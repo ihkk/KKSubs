@@ -1,8 +1,8 @@
 script_name="KK's Test"
-script_description="自动添加code&template行、双语字幕校对及Test"
+script_description="自动添加code&template行、双语字幕处理"
 script_author="IKK"
 script_version="alpha0.1"
-au_return="\n\n──────────\nPowered By IKK\n2021.6.16\n──────────\n"
+au_return="\n\n──────────\nPowered By IKK\n2021.6.17\n──────────\n"
 
 function NO(subs)
     local i=1
@@ -441,33 +441,51 @@ function jump_to_corresponding_line(subs,sel)
     local jp_up_num={}
     local cn_num={}
     local cn_up_num={}
+	local success_count=0
+
     for i=1,#subs do -- 存储所有的行数
         local l=subs[i]
-        if l.style=="TEXT-JP"
-        then
-            table.insert(jp_num,i)
-        elseif l.style=="TEXT-JP-U"
-        then
-            table.insert(jp_up_num,i)
-        elseif l.style=="TEXT-CN"
-        then
-            table.insert(cn_num,i)
-        elseif l.style=="TEXT-CN-U"
-        then
-            table.insert(cn_up_num,i)
-        end
+		if l.class == "dialogue" then
+			if string.match(l.style,"JP")~=nil and string.match(l.style,"OP")==nil and string.match(l.style,"ED")==nil and string.match(l.style,"U")==nil -- 判断TEXT-JP
+			then
+				table.insert(jp_num,i)
+				success_count=success_count+1
+			elseif string.match(l.style,"JP")~=nil and string.match(l.style,"OP")==nil and string.match(l.style,"ED")==nil and string.match(l.style,"U")~=nil -- 判断TEXT-JP-U
+			then
+				table.insert(jp_up_num,i)
+				success_count=success_count+1
+			elseif string.match(l.style,"CN")~=nil and string.match(l.style,"OP")==nil and string.match(l.style,"ED")==nil and string.match(l.style,"U")==nil -- 判断TEXT-CN
+			then
+				table.insert(cn_num,i)
+				success_count=success_count+1
+			elseif string.match(l.style,"CN")~=nil and string.match(l.style,"OP")==nil and string.match(l.style,"ED")==nil and string.match(l.style,"U")~=nil -- 判断TEXT-CN-U
+			then
+				table.insert(cn_up_num,i)
+				success_count=success_count+1
+			end
+		end
     end
 
     local present_style=subs[sel[1]].style --找到选中行的样式
     local present_num=sel[1] --选中行的行数
     local jp_first=jp_num[1] --找到日、中的首行行数
     local cn_first=cn_num[1]
-    if present_style=="TEXT-JP" or present_style=="TEXT-JP-U" then
-        target_num=present_num - jp_first + cn_first        
-    end
-    if present_style=="TEXT-CN" or present_style=="TEXT-CN-U" then
-        target_num=present_num - cn_first + jp_first        
-    end
+	if success_count~=0 then
+		if (string.match(present_style,"JP")~=nil and string.match(present_style,"OP")==nil and string.match(present_style,"ED")==nil and string.match(present_style,"U")==nil) or (string.match(present_style,"JP")~=nil and string.match(present_style,"OP")==nil and string.match(present_style,"ED")==nil and string.match(present_style,"U")~=nil) then
+			target_num=present_num - jp_first + cn_first        
+		
+		elseif (string.match(present_style,"CN")~=nil and string.match(present_style,"OP")==nil and string.match(present_style,"ED")==nil and string.match(present_style,"U")==nil) or (string.match(present_style,"CN")~=nil and string.match(present_style,"OP")==nil and string.match(present_style,"ED")==nil and string.match(present_style,"U")~=nil) then
+			target_num=present_num - cn_first + jp_first        
+		else
+			aegisub.debug.out("选中样式匹配失败")
+			aegisub.debug.out(au_return)
+		end
+	else
+		aegisub.debug.out("未匹配到中日样式")
+		aegisub.debug.out(au_return)
+	end
+
+
 
     local return_table={}
     table.insert( return_table, target_num )
