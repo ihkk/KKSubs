@@ -95,7 +95,7 @@ Which means that, the macro can not only copy the time but also reset the correc
 
 ### Jump to corresponding line
 
-This is a noun-GUI function. It can help you quickly jump from one line to its corresponding line.
+This is a noun-GUI function. It can help you quickly jump from one text line to its corresponding line.
 
-Since this macro does not require the names of CN and JP styles, the default  is `TEXT-JP`, `TEXT-CN`, `TEXT-JP-U` and `TEXT-CN-U` . Other style names are not supported.
-
+Since this macro does not require to input the names of CN and JP styles (as this macro is used as a short-cut function), the default can only match some certain terms. Other style names are not supported.
+Matching rules: the style name must contain `CN` or `JP` to indicate its language; there should be no `OP` or `ED` to avoid processing OP or ED lines. For normal lines there should be no `UP` or `U`, while for up lines there must be `U` or `UP`.
