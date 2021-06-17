@@ -95,8 +95,37 @@ Which means that, the macro can not only copy the time but also reset the correc
 
 ### Jump to corresponding line
 
-This is a non-GUI function. It can help you quickly jump from one text line to its corresponding line.
+This is a no-GUI function. It can help you quickly jump from one text line to its corresponding line.
 
 Since this macro does not require to input the names of CN and JP styles (as this macro is used as a short-cut function), the default can only match some certain terms. Other style names are not supported.
 
 Matching rules: the style name must contain `CN` or `JP` to indicate its language; there should be no `OP` or `ED` to avoid processing OP or ED lines. For normal lines there should be no `UP` or `U`, while for up lines there must be `U` or `UP`.
+
+| Line ID         | Time      | Style      | Text             |
+| --------------- | --------- | ---------- | ---------------- |
+| 1 (selected)    | 0:00-0:05 | JP-TEXT    | きみの声忘れない |
+| 2               | 0:02-0:03 | JP-TEXT-UP | 涙も忘れない     |
+| 3 (re-selected) | 0:00-0:00 | CN-TEXT    | 忘不了你的声音   |
+| 4               | 0:00-0:00 | CN-TEXT    | 也忘不了你的泪水 |
+
+If you select Line 1 and run this macro, Line 3 will be automatically selected.
+
+### Cover time from corresponding line
+
+This is a no_GUI function. It can help you quickly cover a line’s time from its corresponding bilingual line.
+
+The style name match rules are same to the **Jump to corresponding line** function.
+
+This function could be used together with the **Jump to corresponding line** function when timing precisely after the rough job.
+
+| Line ID | Time      | Style   | Text             |
+| ------- | --------- | ------- | ---------------- |
+| 1       | 0:01-0:05 | JP-TEXT | きみの声忘れない |
+| **2**   | 0:00-0:03 | CN-TEXT | 忘不了你的声音   |
+
+If you select Line 2 and run this macro, the subtitles will be changed into
+
+| Line ID | Time          | Style   | Text             |
+| ------- | ------------- | ------- | ---------------- |
+| 1       | 0:01-0:05     | JP-TEXT | きみの声忘れない |
+| **2**   | **0:01-0:05** | CN-TEXT | 忘不了你的声音   |

@@ -477,11 +477,11 @@ function jump_to_corresponding_line(subs,sel)
 		elseif (string.match(present_style,"CN")~=nil and string.match(present_style,"OP")==nil and string.match(present_style,"ED")==nil and string.match(present_style,"U")==nil) or (string.match(present_style,"CN")~=nil and string.match(present_style,"OP")==nil and string.match(present_style,"ED")==nil and string.match(present_style,"U")~=nil) then
 			target_num=present_num - cn_first + jp_first        
 		else
-			aegisub.debug.out("选中样式匹配失败")
+			aegisub.debug.out("选中样式匹配失败。")
 			aegisub.debug.out(au_return)
 		end
 	else
-		aegisub.debug.out("未匹配到中日样式")
+		aegisub.debug.out("未匹配到中日样式。")
 		aegisub.debug.out(au_return)
 	end
 
@@ -495,6 +495,73 @@ end
 
 
 
+
+
+-- 根据对应的中/日文字幕对话覆盖选中行的时间
+function cover_time_from_corresponding_line(subs,sel)
+    local i=1
+    local jp_num={}
+    local jp_up_num={}
+    local cn_num={}
+    local cn_up_num={}
+	local success_count=0
+
+    if sel[2]~=nil then
+        aegisub.debug.out("只能选择一行。")
+		aegisub.debug.out(au_return)
+    else
+
+        for i=1,#subs do -- 存储所有的行数
+            local l=subs[i]
+            if l.class == "dialogue" then
+                if string.match(l.style,"JP")~=nil and string.match(l.style,"OP")==nil and string.match(l.style,"ED")==nil and string.match(l.style,"U")==nil -- 判断TEXT-JP
+                then
+                    table.insert(jp_num,i)
+                    success_count=success_count+1
+                elseif string.match(l.style,"JP")~=nil and string.match(l.style,"OP")==nil and string.match(l.style,"ED")==nil and string.match(l.style,"U")~=nil -- 判断TEXT-JP-U
+                then
+                    table.insert(jp_up_num,i)
+                    success_count=success_count+1
+                elseif string.match(l.style,"CN")~=nil and string.match(l.style,"OP")==nil and string.match(l.style,"ED")==nil and string.match(l.style,"U")==nil -- 判断TEXT-CN
+                then
+                    table.insert(cn_num,i)
+                    success_count=success_count+1
+                elseif string.match(l.style,"CN")~=nil and string.match(l.style,"OP")==nil and string.match(l.style,"ED")==nil and string.match(l.style,"U")~=nil -- 判断TEXT-CN-U
+                then
+                    table.insert(cn_up_num,i)
+                    success_count=success_count+1
+                end
+            end
+        end
+        local present_line=subs[sel[1]] -- 存储当前行
+        local present_style=subs[sel[1]].style --找到选中行的样式
+        local present_num=sel[1] --选中行的行数
+        local jp_first=jp_num[1] --找到日、中的首行行数
+        local cn_first=cn_num[1]
+        if success_count~=0 then
+            if (string.match(present_style,"JP")~=nil and string.match(present_style,"OP")==nil and string.match(present_style,"ED")==nil and string.match(present_style,"U")==nil) or (string.match(present_style,"JP")~=nil and string.match(present_style,"OP")==nil and string.match(present_style,"ED")==nil and string.match(present_style,"U")~=nil) then
+                target_num=present_num - jp_first + cn_first        
+            
+            elseif (string.match(present_style,"CN")~=nil and string.match(present_style,"OP")==nil and string.match(present_style,"ED")==nil and string.match(present_style,"U")==nil) or (string.match(present_style,"CN")~=nil and string.match(present_style,"OP")==nil and string.match(present_style,"ED")==nil and string.match(present_style,"U")~=nil) then
+                target_num=present_num - cn_first + jp_first        
+            else
+                aegisub.debug.out("选中样式匹配失败。")
+                aegisub.debug.out(au_return)
+            end
+        else
+            aegisub.debug.out("未匹配到中日样式。")
+            aegisub.debug.out(au_return)
+        end
+
+        local target_line=subs[target_num]
+        present_line.start_time=target_line.start_time
+        present_line.end_time=target_line.end_time
+
+        subs.delete(sel[1])
+        subs[-sel[1]]=present_line
+    end
+   
+end
 
 
 
@@ -602,6 +669,7 @@ aegisub.register_macro(script_name.."/去注释","删除所有的注释行",NO)
 aegisub.register_macro("Kamigami/日文轴覆盖中文轴","Kamigami JP&CN",cover_cn_by_jp)
 aegisub.register_macro("Kamigami/检查中日轴","Kamigami JP&CN",check_jp_cn)
 aegisub.register_macro("Kamigami/跳转到对应行","Kamigami Jump Line",jump_to_corresponding_line)
+aegisub.register_macro("Kamigami/根据对应行调整时间","Kamigami Cover time from corresponding",cover_time_from_corresponding_line)
 aegisub.register_macro("Auto Template/code line","添加code line",insert_auto_codeline)
 aegisub.register_macro("Auto Template/code syl","添加code syl",insert_auto_codesyl)
 aegisub.register_macro("Auto Template/code once","添加code once",insert_auto_codeonce)
