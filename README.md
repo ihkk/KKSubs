@@ -132,5 +132,5 @@ If you select Line 2 and run this macro, the subtitles will be changed into
 
 ## Reset subset font styles
 
-This is a very private function. The reason I added this is that the nPlayer on my MiTV4 does not display fonts correctly when the MKV files are packaged with font subsets. This macro can automatically change the style with font names in the pattern of`[\c\d]{8}` into `Source Han Sans SC Medium`.
+This is a very private function. The reason I added this is that the nPlayer on my MiTV4 does not display fonts correctly when the MKV files are packaged with font subsets. This macro can automatically change the style with font names in the pattern of `[\c\d]{8}` into `Source Han Sans SC Medium`.
 
