@@ -23,7 +23,6 @@ Video Position: 134904
 [V4+ Styles]
 Format: Name, Fontname, Fontsize, PrimaryColour, SecondaryColour, OutlineColour, BackColour, Bold, Italic, Underline, StrikeOut, ScaleX, ScaleY, Spacing, Angle, BorderStyle, Outline, Shadow, Alignment, MarginL, MarginR, MarginV, Encoding
 Style: CN,思源黑体 CN Medium,80,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,1,0.5,2,10,10,60,1
-Style: 无爱之战,等线,15,&H00FFFFFF,&H00FFFFFF,&H00D5A141,&H00000000,-1,0,0,0,100,100,0,0,1,3,4,2,30,30,15,1
 Style: EN,Calibri,55,&H00FFFFFF,&H000000FF,&H00000000,&H00000000,0,0,0,0,100,100,0,0,1,1,1,2,10,10,2,1
 
 [Events]
