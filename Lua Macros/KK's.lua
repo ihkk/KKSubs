@@ -1,8 +1,12 @@
 script_name="KK's Test"
-script_description="自动添加code&template行、双语字幕校对及Test"
+script_description="自动添加code&template行、双语字幕处理"
 script_author="IKK"
 script_version="alpha0.1"
-au_return="\n\n+──────────+\n| Powered By IKK  |\n+──────────+\n|       2021.5.29      |\n+──────────+"
+au_return="\n\n──────────\nPowered By IKK\n2021.6.17\n──────────\n"
+
+
+
+
 
 function NO(subs)
     local i=1
@@ -207,66 +211,108 @@ jp_cn_config1=
   }
 
 
-function check_jp_cn(subs)  --检查中日匹配
+function check_jp_cn(subs)  --检查中日匹配&空格
     buttons,results =aegisub.dialog.display(jp_cn_config1,{"OK","Cancel"})
     if buttons=="OK" then
+        
+        --清除之前的actor错误标签
         local i=1
-        local jp_lines_num={}
+        for i=1, #subs do
+            local l=subs[i]
+            if l.actor~=nil then
+                if string.match(l.actor,"有误")~=nil and string.match(l.actor,"此行")~=nil and string.match(l.actor,"IKK")~=nil then
+                    l.actor=""
+                    subs.delete(i)
+                    subs[-i]=l
+                end
+            end
+        end       
+
+
+
+        local i=1
+        local jp_lines_num={} --存储序数的表
         local cn_lines_num={}
         local jp_up_lines_num={}
         local cn_up_lines_num={}
 
-        local jpcnt=0
+        local jpcnt=0 --计数
         local cncnt=0
         local jpupcnt=0
         local cnupcnt=0
 
-        local jp_lines_time_start={}
+        local jp_lines_time_start={} --开始时间
         local cn_lines_time_start={}
         local jp_up_lines_time_start={}
         local cn_up_lines_time_start={}
 
-        local jp_lines_time_end={}
+        local jp_lines_time_end={} --结束时间
         local cn_lines_time_end={}
         local jp_up_lines_time_end={}
         local cn_up_lines_time_end={}
 
-        local jp_style = results["日"]
+        local jp_text={}
+        local cn_text={}
+        local jp_up_text={}
+        local cn_up_text={}
+
+        local line_with_lable={}
+        local line_with_lable_count=0
+
+
+
+        local jp_style = results["日"] --输入样式名
         local cn_style = results["中"]
         local jp_up_style = results["日上"]
         local cn_up_style = results["中上"] 
-        for i=1,#subs do
+        for i=1,#subs do --将所有的字幕信息写入独立的表中
             local l=subs[i]
-            if l.style==jp_style --处理JP轴
+            if l.style==jp_style and string.match(l.text,"%-%-")==nil --处理JP轴
             then
                 table.insert(jp_lines_num, i)
                 jpcnt=jpcnt+1
                 jp_lines_time_start[jpcnt]=l.start_time
-                jp_lines_time_end[jpcnt]=l.end_time                
-            elseif l.style==cn_style --处理CN轴
+                jp_lines_time_end[jpcnt]=l.end_time
+                jp_text[jpcnt]=l.text
+
+                if string.match(l.text,"\\") then -- 检查带标签的text行
+                    table.insert(line_with_lable,i) 
+                    line_with_lable_count=line_with_lable_count+1  
+                end       
+
+            elseif l.style==cn_style and string.match(l.text,"%-%-")==nil --处理CN轴
             then
                 table.insert(cn_lines_num, i)
                 cncnt=cncnt+1
                 cn_lines_time_start[cncnt]=l.start_time
-                cn_lines_time_end[cncnt]=l.end_time                                  
-            elseif l.style==jp_up_style --处理JP-UP轴
+                cn_lines_time_end[cncnt]=l.end_time
+                cn_text[cncnt]=l.text
+            elseif l.style==jp_up_style and string.match(l.text,"%-%-")==nil --处理JP-UP轴
             then
                 table.insert(jp_up_lines_num, i)
                 jpupcnt=jpupcnt+1          
                 jp_up_lines_time_start[jpupcnt]=l.start_time
-                jp_up_lines_time_end[jpupcnt]=l.end_time                                 
-            elseif l.style==cn_up_style --处理CN-UP轴
+                jp_up_lines_time_end[jpupcnt]=l.end_time
+                jp_up_text[jpupcnt]=l.text
+
+                if string.match(l.text,"\\") then  -- 检查带标签的text行
+                    table.insert(line_with_lable,i) 
+                    line_with_lable_count=line_with_lable_count+1  
+                end 
+
+            elseif l.style==cn_up_style and string.match(l.text,"%-%-")==nil --处理CN-UP轴
             then
                 table.insert(cn_up_lines_num, i)
                 cnupcnt=cnupcnt+1       
                 cn_up_lines_time_start[cnupcnt]=l.start_time
-                cn_up_lines_time_end[cnupcnt]=l.end_time                                        
+                cn_up_lines_time_end[cnupcnt]=l.end_time
+                cn_up_text[cnupcnt]=l.text                                        
             end
         end
         -- 数量比对
         if jpcnt==cncnt and jpupcnt==cnupcnt 
         then
-            aegisub.debug.out("中日轴数量相符，")
+            aegisub.debug.out("中日轴数量相符，共"..jpcnt.."+"..jpupcnt.."行，")
                                     -- 如果数量一致，则进行时间对比
                                     local lp=1
                                     local wrongtimecnt=0
@@ -288,19 +334,88 @@ function check_jp_cn(subs)  --检查中日匹配
                                     end
                                     if wrongtimecnt==0 
                                     then
-                                        aegisub.debug.out("且时间均匹配。"..au_return)
+                                        aegisub.debug.out("且时间均匹配。")
+
+                                        --空格核对
+                                        local wrongtext={}
+                                        local wrongtextcnt=0
+                                        local checktext=1
+                                        for checktext=1, jpcnt do --jp
+                                            if string.match(jp_text[checktext]," ")~=nil then table.insert(wrongtext, jp_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1  --半角空格
+                                            elseif string.match(jp_text[checktext],"  ")~=nil then table.insert(wrongtext, jp_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1  --双半角空格
+                                            elseif string.match(jp_text[checktext],"　　")~=nil then table.insert(wrongtext, jp_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1  --双全角空格
+                                            elseif string.sub(jp_text[checktext],string.len(jp_text[checktext])-2,-1)=="　" then table.insert(wrongtext, jp_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1  --末尾全角空格
+                                            elseif string.sub(jp_text[checktext],string.len(jp_text[checktext]),-1)==" " then table.insert(wrongtext, jp_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1  --末尾半角空格
+                                            elseif string.sub(jp_text[checktext],string.len(jp_text[checktext])-5,-1)=="　‎" then table.insert(wrongtext, jp_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1 end --全角空格带换行
+
+                                        end
+                                        local checktext=1
+                                        for checktext=1, jpupcnt do --jp_up
+                                            if string.match(jp_up_text[checktext]," ")~=nil then table.insert(wrongtext, jp_up_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1 --半角空格
+                                            elseif string.match(jp_up_text[checktext],"  ")~=nil then table.insert(wrongtext, jp_up_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1 --双半角空格
+                                            elseif string.match(jp_up_text[checktext],"　　")~=nil then table.insert(wrongtext, jp_up_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1 --双全角空格
+                                            elseif string.sub(jp_up_text[checktext],string.len(jp_up_text[checktext])-2,-1)=="　" then table.insert(wrongtext, jp_up_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1 --末尾全角空格
+                                            elseif string.sub(jp_up_text[checktext],string.len(jp_up_text[checktext]),-1)==" " then table.insert(wrongtext, jp_up_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1 --末尾半角空格
+                                            elseif string.sub(jp_up_text[checktext],string.len(jp_up_text[checktext])-5,-1)=="　‎" then table.insert(wrongtext, jp_up_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1 end --全角空格带换行
+                                        end
+                                        local checktext=1
+                                        for checktext=1, cncnt do --cn
+                                            if string.match(cn_text[checktext],"　")~=nil then table.insert(wrongtext, cn_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1 --全角空格
+                                            elseif string.match(cn_text[checktext],"  ")~=nil then table.insert(wrongtext, cn_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1 --双半角空格
+                                            elseif string.match(cn_text[checktext],"　　")~=nil then table.insert(wrongtext, cn_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1 --双全角空格
+                                            elseif string.sub(cn_text[checktext],string.len(cn_text[checktext])-2,-1)=="　" then table.insert(wrongtext, cn_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1 --末尾全角空格
+                                            elseif string.sub(cn_text[checktext],string.len(cn_text[checktext]),-1)==" " then table.insert(wrongtext, cn_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1 end--末尾半角空格
+                                        end
+                                        local checktext=1
+                                        for checktext=1, cnupcnt do --cnup
+                                            if string.match(cn_up_text[checktext],"　")~=nil then table.insert(wrongtext, cn_up_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1 --全角空格
+                                            elseif string.match(cn_up_text[checktext],"  ")~=nil then table.insert(wrongtext, cn_up_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1 --双半角空格
+                                            elseif string.match(cn_up_text[checktext],"　　")~=nil then table.insert(wrongtext, cn_up_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1 --双全角空格
+                                            elseif string.sub(cn_up_text[checktext],string.len(cn_up_text[checktext])-2,-1)=="　" then table.insert(wrongtext, cn_up_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1 --末尾全角空格
+                                            elseif string.sub(cn_up_text[checktext],string.len(cn_up_text[checktext]),-1)==" " then table.insert(wrongtext, cn_up_lines_num[checktext]) wrongtextcnt=wrongtextcnt+1 end --末尾半角空格
+                                        end                                                
+                                        
+                                        if wrongtextcnt==0 then
+                                             aegisub.debug.out("\n\n空格检查未发现错误。")
+                                            
+                                            -- 检查带标签的text行并提醒
+                                            if line_with_lable_count~=0 then  
+                                                aegisub.debug.out("\n\n【提示】有"..tostring(line_with_lable_count).."句字幕带标签，请确认中日字幕均已处理。\n已经自动选择有标签的行。")
+                                                aegisub.debug.out(au_return)
+                                                return line_with_lable
+                                            
+                                            end
+
+
+
+                                        else
+                                            local i=1
+                                            for i=1, wrongtextcnt do
+                                                local tempnum=wrongtext[i]
+                                                local tempsub=subs[tempnum]
+                                                tempsub.actor="IKK: 此行空格有误["..tostring(i).."/"..tostring(wrongtextcnt).."]"
+                                                subs.delete(tempnum)
+                                                subs[-tempnum]=tempsub
+                                            end                                            
+                                            aegisub.debug.out("\n\n空格检查发现错误，已自动选择"..wrongtextcnt.."处错误行，并打上actor标签")
+                                            aegisub.debug.out(au_return)
+                                            return wrongtext
+                                        end
+                                        
+
+                                        
                                     else
                                         -- 给时间错误的行打上actor
                                         local i=1
                                         for i=1, wrongtimecnt do
                                             local tempnum=wrongtimesel[i]
                                             local tempsub=subs[tempnum]
-                                            tempsub.actor="此行时间有误["..tostring(i).."/"..tostring(wrongtimecnt).."]"
+                                            tempsub.actor="IKK: 此行时间有误["..tostring(i).."/"..tostring(wrongtimecnt).."]"
                                             subs.delete(tempnum)
                                             subs[-tempnum]=tempsub
                                         end
-                                        aegisub.debug.out("但有"..tostring(wrongtimecnt).."句时间不匹配。已自动选择并标出错误的日文轴\n按照先普通轴后UP轴的顺序检索，错误标号可能不连续。\n")
-                                        aegisub.debug.out(au_return)                                        
+                                        aegisub.debug.out("但有 "..tostring(wrongtimecnt).." 句时间不匹配。\n已自动选择并标出错误的日文轴。\n\n由于按照先普通轴后UP轴的顺序检索，错误标号可能不连续。\n\n")
+                                        aegisub.debug.out("因时间不一致，空格检查未执行。\n")                                        
                                         return wrongtimesel
                                     end
 
@@ -313,9 +428,143 @@ function check_jp_cn(subs)  --检查中日匹配
             aegisub.debug.out("中文轴"..tostring(cncnt).."行；\n")
             aegisub.debug.out("日UP轴"..tostring(jpupcnt).."行，")
             aegisub.debug.out("中UP轴"..tostring(cnupcnt).."行。\n\n")
-            aegisub.debug.out(au_return)            
+            aegisub.debug.out("因时间不一致，空格检查未执行。\n")
         end
+        aegisub.debug.out(au_return)
+
+
     end
+    
+end
+
+
+-- 跳转到对应的中/日文字幕对话行
+function jump_to_corresponding_line(subs,sel)
+    local i=1
+    local jp_num={}
+    local jp_up_num={}
+    local cn_num={}
+    local cn_up_num={}
+	local success_count=0
+
+    for i=1,#subs do -- 存储所有的行数
+        local l=subs[i]
+		if l.class == "dialogue" then
+			if string.match(l.style,"JP")~=nil and string.match(l.style,"OP")==nil and string.match(l.style,"ED")==nil and string.match(l.style,"U")==nil -- 判断TEXT-JP
+			then
+				table.insert(jp_num,i)
+				success_count=success_count+1
+			elseif string.match(l.style,"JP")~=nil and string.match(l.style,"OP")==nil and string.match(l.style,"ED")==nil and string.match(l.style,"U")~=nil -- 判断TEXT-JP-U
+			then
+				table.insert(jp_up_num,i)
+				success_count=success_count+1
+			elseif string.match(l.style,"CN")~=nil and string.match(l.style,"OP")==nil and string.match(l.style,"ED")==nil and string.match(l.style,"U")==nil -- 判断TEXT-CN
+			then
+				table.insert(cn_num,i)
+				success_count=success_count+1
+			elseif string.match(l.style,"CN")~=nil and string.match(l.style,"OP")==nil and string.match(l.style,"ED")==nil and string.match(l.style,"U")~=nil -- 判断TEXT-CN-U
+			then
+				table.insert(cn_up_num,i)
+				success_count=success_count+1
+			end
+		end
+    end
+
+    local present_style=subs[sel[1]].style --找到选中行的样式
+    local present_num=sel[1] --选中行的行数
+    local jp_first=jp_num[1] --找到日、中的首行行数
+    local cn_first=cn_num[1]
+	if success_count~=0 then
+		if (string.match(present_style,"JP")~=nil and string.match(present_style,"OP")==nil and string.match(present_style,"ED")==nil and string.match(present_style,"U")==nil) or (string.match(present_style,"JP")~=nil and string.match(present_style,"OP")==nil and string.match(present_style,"ED")==nil and string.match(present_style,"U")~=nil) then
+			target_num=present_num - jp_first + cn_first        
+		
+		elseif (string.match(present_style,"CN")~=nil and string.match(present_style,"OP")==nil and string.match(present_style,"ED")==nil and string.match(present_style,"U")==nil) or (string.match(present_style,"CN")~=nil and string.match(present_style,"OP")==nil and string.match(present_style,"ED")==nil and string.match(present_style,"U")~=nil) then
+			target_num=present_num - cn_first + jp_first        
+		else
+			aegisub.debug.out("选中样式匹配失败。")
+			aegisub.debug.out(au_return)
+		end
+	else
+		aegisub.debug.out("未匹配到中日样式。")
+		aegisub.debug.out(au_return)
+	end
+
+
+
+    local return_table={}
+    table.insert( return_table, target_num )
+    return return_table
+end
+
+
+
+
+
+
+-- 根据对应的中/日文字幕对话覆盖选中行的时间
+function cover_time_from_corresponding_line(subs,sel)
+    local i=1
+    local jp_num={}
+    local jp_up_num={}
+    local cn_num={}
+    local cn_up_num={}
+	local success_count=0
+
+    if sel[2]~=nil then
+        aegisub.debug.out("只能选择一行。")
+		aegisub.debug.out(au_return)
+    else
+
+        for i=1,#subs do -- 存储所有的行数
+            local l=subs[i]
+            if l.class == "dialogue" then
+                if string.match(l.style,"JP")~=nil and string.match(l.style,"OP")==nil and string.match(l.style,"ED")==nil and string.match(l.style,"U")==nil -- 判断TEXT-JP
+                then
+                    table.insert(jp_num,i)
+                    success_count=success_count+1
+                elseif string.match(l.style,"JP")~=nil and string.match(l.style,"OP")==nil and string.match(l.style,"ED")==nil and string.match(l.style,"U")~=nil -- 判断TEXT-JP-U
+                then
+                    table.insert(jp_up_num,i)
+                    success_count=success_count+1
+                elseif string.match(l.style,"CN")~=nil and string.match(l.style,"OP")==nil and string.match(l.style,"ED")==nil and string.match(l.style,"U")==nil -- 判断TEXT-CN
+                then
+                    table.insert(cn_num,i)
+                    success_count=success_count+1
+                elseif string.match(l.style,"CN")~=nil and string.match(l.style,"OP")==nil and string.match(l.style,"ED")==nil and string.match(l.style,"U")~=nil -- 判断TEXT-CN-U
+                then
+                    table.insert(cn_up_num,i)
+                    success_count=success_count+1
+                end
+            end
+        end
+        local present_line=subs[sel[1]] -- 存储当前行
+        local present_style=subs[sel[1]].style --找到选中行的样式
+        local present_num=sel[1] --选中行的行数
+        local jp_first=jp_num[1] --找到日、中的首行行数
+        local cn_first=cn_num[1]
+        if success_count~=0 then
+            if (string.match(present_style,"JP")~=nil and string.match(present_style,"OP")==nil and string.match(present_style,"ED")==nil and string.match(present_style,"U")==nil) or (string.match(present_style,"JP")~=nil and string.match(present_style,"OP")==nil and string.match(present_style,"ED")==nil and string.match(present_style,"U")~=nil) then
+                target_num=present_num - jp_first + cn_first        
+            
+            elseif (string.match(present_style,"CN")~=nil and string.match(present_style,"OP")==nil and string.match(present_style,"ED")==nil and string.match(present_style,"U")==nil) or (string.match(present_style,"CN")~=nil and string.match(present_style,"OP")==nil and string.match(present_style,"ED")==nil and string.match(present_style,"U")~=nil) then
+                target_num=present_num - cn_first + jp_first        
+            else
+                aegisub.debug.out("选中样式匹配失败。")
+                aegisub.debug.out(au_return)
+            end
+        else
+            aegisub.debug.out("未匹配到中日样式。")
+            aegisub.debug.out(au_return)
+        end
+
+        local target_line=subs[target_num]
+        present_line.start_time=target_line.start_time
+        present_line.end_time=target_line.end_time
+
+        subs.delete(sel[1])
+        subs[-sel[1]]=present_line
+    end
+   
 end
 
 
@@ -336,6 +585,9 @@ function cover_cn_by_jp(subs)  --日语轴样式和时间覆盖中文轴
         local jp_up_lines_time_start={}
         local jp_lines_time_end={}
         local jp_up_lines_time_end={}
+        
+        local jp_layer={}
+        local jp_up_layer={}
 
         local jp_style = results["日"]
         local cn_style = results["中"]
@@ -353,16 +605,18 @@ function cover_cn_by_jp(subs)  --日语轴样式和时间覆盖中文轴
                 jpcnt=jpcnt+1
                 jp_lines_time_start[jpcnt]=l.start_time
                 jp_lines_time_end[jpcnt]=l.end_time
+                jp_layer[jpcnt]=l.layer
                 cntalljp=cntalljp+1
-                styles[cntalljp]=0
+                styles[cntalljp]=0 --如果是普通轴，则样式标0
             elseif l.style==jp_up_style --处理JP-UP轴
             then
                 table.insert(jp_up_lines_num, i)
                 jpupcnt=jpupcnt+1          
                 jp_up_lines_time_start[jpupcnt]=l.start_time
-                jp_up_lines_time_end[jpupcnt]=l.end_time  
+                jp_up_lines_time_end[jpupcnt]=l.end_time 
+                jp_up_layer[jpupcnt]=l.layer
                 cntalljp=cntalljp+1
-                styles[cntalljp]=1                              
+                styles[cntalljp]=1  --如果是上轴，则样式标1                            
             elseif l.style==cn_style --处理CN轴
             then
                 table.insert(cn_lines_num, i)
@@ -387,7 +641,7 @@ function cover_cn_by_jp(subs)  --日语轴样式和时间覆盖中文轴
                     tmp_cn_sub.start_time=jp_lines_time_start[jp]
                     tmp_cn_sub.end_time=jp_lines_time_end[jp]
                     tmp_cn_sub.style=cn_style
-                    tmp_cn_sub.layer=1
+                    tmp_cn_sub.layer=jp_layer[jp]+1
                     subs.delete(cntmpnum)
                     subs[-cntmpnum]=tmp_cn_sub
                 else
@@ -398,7 +652,7 @@ function cover_cn_by_jp(subs)  --日语轴样式和时间覆盖中文轴
                     tmp_cn_sub.start_time=jp_up_lines_time_start[jp_up]
                     tmp_cn_sub.end_time=jp_up_lines_time_end[jp_up]
                     tmp_cn_sub.style=cn_up_style
-                    tmp_cn_sub.layer=1
+                    tmp_cn_sub.layer=jp_up_layer[jp_up]+1
                     subs.delete(cntmpnum)
                     subs[-cntmpnum]=tmp_cn_sub  
                 end                  
@@ -410,27 +664,53 @@ function cover_cn_by_jp(subs)  --日语轴样式和时间覆盖中文轴
             aegisub.debug.out("中日字幕数量不匹配，请检查。\n注意：应用此脚本时，所有的中文字幕都应当被设置为默认格式（例如所有中文都是\"TEXT-CN\"样式），而不应有\"TEXT-CN-U\"格式出现。")
             aegisub.debug.out(au_return)
         end
+        
     end
 end
 
+function recover_subfont(subs) -- 重置字体子集化
+    local style_line={}
+    local style_font={}
+    local style_num=0
+    local sub_font_num=0
+    for i=1,#subs do -- 筛选被子集化的样式
+        if subs[i].fontname then
+            style_num=style_num+1
+            table.insert(style_line, i)
+            table.insert(style_font, subs[i].fontname)
+        end
+    end
+    aegisub.debug.out("共有"..tostring(style_num).."个样式")
+    for i=1,#style_line do
+        pos = style_line[i]
+        if string.match(subs[pos].fontname,"[%a%d][%a%d][%a%d][%a%d][%a%d][%a%d][%a%d][%a%d]")~=nil then
+            sub_font_num=sub_font_num+1
+            local tempsub=subs[pos]
+            tempsub.fontname="Source Han Sans SC Medium"
+            subs.delete(pos)
+            subs[-pos]=tempsub
+
+        end
+    end
+    if sub_font_num>0 then
+        aegisub.debug.out("\n其中"..tostring(sub_font_num).."个是子集，已经修改为思源黑体M (Source Han Sans SC Medium)")
+        elseif sub_font_num==0 
+        then
+            aegisub.debug.out("\n其中没有发现子集字体。")
+        
+    end
 
 
 
+end
 
-
-
-
-
-
-
-
-
-
-
-
+-- 注册插件到菜单
 aegisub.register_macro(script_name.."/去注释","删除所有的注释行",NO)
+aegisub.register_macro(script_name.."/恢复字体子集化","撤销字体子集化",recover_subfont)
 aegisub.register_macro("Kamigami/日文轴覆盖中文轴","Kamigami JP&CN",cover_cn_by_jp)
-aegisub.register_macro("Kamigami/检查中日匹配","Kamigami JP&CN",check_jp_cn)
+aegisub.register_macro("Kamigami/检查中日轴","Kamigami JP&CN",check_jp_cn)
+aegisub.register_macro("Kamigami/跳转到对应行","Kamigami Jump Line",jump_to_corresponding_line)
+aegisub.register_macro("Kamigami/根据对应行调整时间","Kamigami Cover time from corresponding",cover_time_from_corresponding_line)
 aegisub.register_macro("Auto Template/code line","添加code line",insert_auto_codeline)
 aegisub.register_macro("Auto Template/code syl","添加code syl",insert_auto_codesyl)
 aegisub.register_macro("Auto Template/code once","添加code once",insert_auto_codeonce)
