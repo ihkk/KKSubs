@@ -1,10 +1,4 @@
-# Movies
-
-Subtitles which were re-timed or edited by KK for certain versions.
-
-# Lua Macros
-
-Macros used for adding effect lines, covering and checking lines for bilingual(especially Japanese & Chinese) subtitles.
+# Aegisub plugins
 
 ## Auto Template
 
@@ -133,4 +127,10 @@ If you select Line 2 and run this macro, the subtitles will be changed into
 ## Reset subset font styles
 
 This is a very private function. The reason I added this is that the nPlayer on my MiTV4 does not display fonts correctly when the MKV files are packaged with font subsets. This macro can automatically change the style with font names in the pattern of `[\c\d]{8}` into `Source Han Sans SC Medium`.
+
+# Movies
+
+<del>Subtitles which were re-timed or edited by KK for certain versions.</del>
+
+I'd moved these subtitles to a specific repository: [ihkk/movie-subs](https://github.com/ihkk/movie-subs).
 
