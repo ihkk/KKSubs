@@ -1,5 +1,18 @@
 # Aegisub plugins
 
+## Quick Move
+
+This functions helps you to easily move a subtitle's `\pos` using hotkeys.
+
+The default setting is to move `1px` for a small step and `15px` for a big step, but you may change the setting in the scripts easily.
+
+```lua
+SMALL_STEP = 1
+BIG_STEP = 15
+```
+
+Part of script functions are adapted from [Hyperdimensional Relocator](https://github.com/TypesettingTools/unanimated-Aegisub-Scripts/blob/master/ua.Relocator.lua) written by [unanimated](https://github.com/unanimated).
+
 ## Auto Template
 
 These functions are under: `\Automation\Auto Template`
