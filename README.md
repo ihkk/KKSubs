@@ -11,51 +11,51 @@ Currently provides following plugins:
    </tr>
    <tr>
       <td>QuickMove.lua</td>
-      <td>Left_move_1px</td>
-      <td>快速移动/左移1px</td>
-      <td>Move the selected line left 1 px</td>
+      <td>Left_move_small</td>
+      <td>快速移动/左移小间隔</td>
+      <td>Move the selected line left with a small step</td>
    </tr>
    <tr>
       <td></td>
-      <td>Right_move_1px</td>
-      <td>快速移动/右移1px</td>
-      <td>Move the selected line right 1 px</td>
+      <td>Right_move_small</td>
+      <td>快速移动/右移小间隔</td>
+      <td>Move the selected line right with a small step</td>
    </tr>
    <tr>
       <td></td>
-      <td>Up_move_1px</td>
-      <td>快速移动/上移1px</td>
-      <td>Move the selected line up 1 px</td>
+      <td>Up_move_small</td>
+      <td>快速移动/上移小间隔</td>
+      <td>Move the selected line up with a small step</td>
    </tr>
    <tr>
       <td></td>
-      <td>Down_move_1px</td>
-      <td>快速移动/下移1px</td>
-      <td>Move the selected line down 1 px</td>
+      <td>Down_move_small</td>
+      <td>快速移动/下移小间隔</td>
+      <td>Move the selected line down with a small step</td>
    </tr>
    <tr>
       <td></td>
-      <td>Left_move_15px</td>
-      <td>快速移动/左移15px</td>
+      <td>Left_move_big</td>
+      <td>快速移动/左移大间隔</td>
       <td>Move the selected line left 15 px</td>
    </tr>
    <tr>
       <td></td>
-      <td>Right_move_15px</td>
-      <td>快速移动/右移15px</td>
+      <td>Right_move_big</td>
+      <td>快速移动/右移大间隔</td>
       <td>Move the selected line right 15 px</td>
    </tr>
    <tr>
       <td></td>
-      <td>Up_move_15px</td>
-      <td>快速移动/上移15px</td>
+      <td>Up_move_big</td>
+      <td>快速移动/上移大间隔</td>
       <td>Move the selected line up 15 px</td>
    </tr>
    <tr>
       <td></td>
-      <td>Down_move_15px</td>
-      <td>快速移动/下移15px</td>
-      <td>Move the selected line down 15 px</td>
+      <td>Down_move_big</td>
+      <td>快速移动/下移大间隔</td>
+      <td>Move the selected line down with a big step</td>
    </tr>
    <tr>
       <td></td>
@@ -197,17 +197,18 @@ Currently provides following plugins:
    </tr>
 </table>
 
+
 ## Quick Move
 
 ### With hotkeys
 
 This functions helps you to easily move a subtitle's `\pos` using hotkeys.
 
-The default setting is to move `1px` for a small step and `15px` for a big step, but you may change the setting in the scripts easily.
+The default setting is to move `1px` for a small step and `script.width / 128 (px)`   for a big step, but you may change the setting in the scripts easily.
 
 ```lua
 SMALL_STEP = 1
-BIG_STEP = 15
+BIG_STEP = x / 128
 ```
 
 Part of script functions are adapted from [Hyperdimensional Relocator](https://github.com/TypesettingTools/unanimated-Aegisub-Scripts/blob/master/ua.Relocator.lua) written by [unanimated](https://github.com/unanimated).
