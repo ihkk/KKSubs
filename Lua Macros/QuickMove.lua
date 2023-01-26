@@ -3,12 +3,30 @@ script_name = "Quick Move"
 script_description = "快速移动"
 script_author = "IKK"
 -- part of scirpts are from Hyperdimensional Relocator written by reanimated 
-script_version = "0.1"
+script_version = "0.2"
 
 -- getpos
 -- ** This function is witten by reanimated from Hyperdimensional Relocator **
 -- **      Check site: "http://unanimated.hostfree.pw/ts/relocator.lua"     **
 
+function getSize(subs)
+    local i = 1
+    local x = 0
+    local y = 0
+    while i <= 10 do
+        local l = subs[i]
+        if l.class == "info" then
+            info = l.key
+            if info == "PlayResX" then
+                x = l.value
+            else
+                if info == "PlayResY" then y = l.value end
+            end
+        end
+        i = i + 1
+    end
+    return x, y
+end
 
 function getpos(subs, text)
     st = nil
@@ -221,79 +239,107 @@ function move_styles(subs)
 
 end
 
+function script_has_size(subs)
+    x, y = getSize(subs)
+    if x ~= 0 and y ~= 0 then
+        return true
+    else
+        return false
+    end
+end
+
 SMALL_STEP = 1
-BIG_STEP = 15
 
 -- 向左移动1个像素
-function Left_move_1px(subs, sel) Move(subs, sel, -SMALL_STEP, 0) end
+function Left_move_small(subs, sel) Move(subs, sel, -SMALL_STEP, 0) end
 
 -- 向右移动1个像素
-function Right_move_1px(subs, sel) Move(subs, sel, SMALL_STEP, 0) end
+function Right_move_small(subs, sel) Move(subs, sel, SMALL_STEP, 0) end
 
 -- 向上移动1个像素
-function Up_move_1px(subs, sel) Move(subs, sel, 0, -SMALL_STEP) end
+function Up_move_small(subs, sel) Move(subs, sel, 0, -SMALL_STEP) end
 
 -- 向下移动1个像素
-function Down_move_1px(subs, sel) Move(subs, sel, 0, SMALL_STEP) end
+function Down_move_small(subs, sel) Move(subs, sel, 0, SMALL_STEP) end
 
 -- 向左移动15个像素
-function Left_move_15px(subs, sel) Move(subs, sel, -BIG_STEP, 0) end
+function Left_move_big(subs, sel)
+    x, y = getSize(subs)
+    BIG_STEP = x / 128
+    Move(subs, sel, -BIG_STEP, 0)
+end
 
 -- 向右移动15个像素
-function Right_move_15px(subs, sel) Move(subs, sel, BIG_STEP, 0) end
+function Right_move_big(subs, sel)
+    x, y = getSize(subs)
+    BIG_STEP = x / 128
+    Move(subs, sel, BIG_STEP, 0)
+end
 
 -- 向上移动15个像素
-function Up_move_15px(subs, sel) Move(subs, sel, 0, -BIG_STEP) end
+function Up_move_big(subs, sel)
+    x, y = getSize(subs)
+    BIG_STEP = x / 128
+    Move(subs, sel, 0, -BIG_STEP)
+end
 
 -- 向下移动15个像素
-function Down_move_15px(subs, sel) Move(subs, sel, 0, BIG_STEP) end
+function Down_move_big(subs, sel)
+    x, y = getSize(subs)
+    BIG_STEP = x / 128
+    Move(subs, sel, 0, BIG_STEP)
+end
 
-aegisub.register_macro("快速移动/左移1px", "Move left 1 px", Left_move_1px)
+aegisub.register_macro("快速移动/左移小间隔", "Move left small",
+                       Left_move_small, script_has_size)
 
-aegisub.register_macro("快速移动/右移1px", "Move right 1 px",
-                       Right_move_1px)
+aegisub.register_macro("快速移动/右移小间隔", "Move right small",
+                       Right_move_small, script_has_size)
 
-aegisub.register_macro("快速移动/上移1px", "Move up 1 px", Up_move_1px)
+aegisub.register_macro("快速移动/上移小间隔", "Move up small",
+                       Up_move_small, script_has_size)
 
-aegisub.register_macro("快速移动/下移1px", "Move down 1 px", Down_move_1px)
+aegisub.register_macro("快速移动/下移小间隔", "Move down small",
+                       Down_move_small, script_has_size)
 
-aegisub.register_macro("快速移动/左移15px", "Move left 15 px",
-                       Left_move_15px)
+aegisub.register_macro("快速移动/左移大间隔", "Move left big",
+                       Left_move_big, script_has_size)
 
-aegisub.register_macro("快速移动/右移15px", "Move right 15 px",
-                       Right_move_15px)
+aegisub.register_macro("快速移动/右移大间隔", "Move right big",
+                       Right_move_big, script_has_size)
 
-aegisub.register_macro("快速移动/上移15px", "Move up 15 px", Up_move_15px)
+aegisub.register_macro("快速移动/上移大间隔", "Move up big",
+                       Up_move_big, script_has_size)
 
-aegisub.register_macro("快速移动/下移15px", "Move down 15 px",
-                       Down_move_15px)
+aegisub.register_macro("快速移动/下移大间隔", "Move down big",
+                       Down_move_big, script_has_size)
 
 aegisub.register_macro("Furigana Helper/Move by style", "Move by style",
-                       move_styles)
+                       move_styles, script_has_size)
 
 -- Hotkey Config Suggestion
 
--- "automation/lua/QuickMove/快速移动/上移15px" : [
+-- "automation/lua/QuickMove/快速移动/上移大间隔" : [
 --     "Ctrl-Alt-Shift-Up"
 -- ],
--- "automation/lua/QuickMove/快速移动/上移1px" : [
+-- "automation/lua/QuickMove/快速移动/上移小间隔" : [
 --     "Ctrl-Shift-Up"
 -- ],
--- "automation/lua/QuickMove/快速移动/下移15px" : [
+-- "automation/lua/QuickMove/快速移动/下移大间隔" : [
 --     "Ctrl-Alt-Shift-Down"
 -- ],
--- "automation/lua/QuickMove/快速移动/下移1px" : [
+-- "automation/lua/QuickMove/快速移动/下移小间隔" : [
 --     "Ctrl-Shift-Down"
 -- ],
--- "automation/lua/QuickMove/快速移动/右移15px" : [
+-- "automation/lua/QuickMove/快速移动/右移大间隔" : [
 --     "Ctrl-Alt-Shift-Right"
 -- ],
--- "automation/lua/QuickMove/快速移动/右移1px" : [
+-- "automation/lua/QuickMove/快速移动/右移小间隔" : [
 --     "Ctrl-Shift-Right"
 -- ],
--- "automation/lua/QuickMove/快速移动/左移15px" : [
+-- "automation/lua/QuickMove/快速移动/左移大间隔" : [
 --     "Ctrl-Alt-Shift-Left"
 -- ],
--- "automation/lua/QuickMove/快速移动/左移1px" : [
+-- "automation/lua/QuickMove/快速移动/左移小间隔" : [
 --     "Ctrl-Shift-Left"
 -- ],
